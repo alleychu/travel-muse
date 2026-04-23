@@ -1298,14 +1298,14 @@ function showResult() {
   const key = getCity();
   const c = cities[key];
 
-  // Generate 3 stable picsum URLs using city queries as seed
+  // Generate 3 Unsplash images using city name
   const grid = document.getElementById('photosGrid');
-  const queries = c.queries || ['travel'];
-  const photos = queries.slice(0, 3).map((q, i) => {
-    const hash = q.split('').reduce((h, ch) => h * 31 + ch.charCodeAt(0), 0);
-    const seed = Math.abs(hash + i * 1000) % 80 + 1;
-    return `https://picsum.photos/1600/900?random=${seed}`;
-  });
+  const cityName = c.name.split('·')[0].trim();
+  const photos = [
+    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityName)}`,
+    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityName + ' travel')}`,
+    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityName + ' landscape')}`
+  ];
 
   grid.innerHTML = photos.map((url, idx) => `
     <div class="carousel-slide${idx === 0 ? ' active' : ''}">
