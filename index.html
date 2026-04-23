@@ -1298,14 +1298,21 @@ function showResult() {
   const key = getCity();
   const c = cities[key];
 
-  // Generate 3 Unsplash images using city name with travel keywords
+  // Generate 3 stable Picsum images per city
   const grid = document.getElementById('photosGrid');
-  const cityEn = c.nameEn;
-  const photos = [
-    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityEn)},destination`,
-    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityEn)},travel,tourism`,
-    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityEn)},city`
-  ];
+  const citySeeds = {
+    maldives: [10, 20, 30], lisbon: [40, 50, 60], amalfi: [70, 80, 90],
+    bali: [100, 110, 120], singapore: [130, 140, 150], chiangmai: [160, 170, 180],
+    santorini: [190, 200, 210], copenhagen: [220, 230, 240], kyoto: [250, 260, 270],
+    sydney: [280, 290, 300], barcelona: [310, 320, 330], queenstown: [340, 350, 360],
+    rio: [370, 380, 390], tokyo: [400, 410, 420], taipei: [430, 440, 450],
+    miami: [460, 470, 480], newyork: [490, 500, 510], vancouver: [520, 530, 540],
+    dubrovnik: [550, 560, 570], istanbul: [580, 590, 600], bergen: [610, 620, 630],
+    havana: [640, 650, 660], seoul: [670, 680, 690], luangprabang: [700, 710, 720],
+    nice: [730, 740, 750], vienna: [760, 770, 780], salzburg: [790, 800, 810]
+  };
+  const seeds = citySeeds[getCity()] || [10, 20, 30];
+  const photos = seeds.map(s => `https://picsum.photos/1600/900?random=${s}`);
 
   grid.innerHTML = photos.map((url, idx) => `
     <div class="carousel-slide${idx === 0 ? ' active' : ''}">
