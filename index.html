@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>旅行靈感 · Travel Muse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --dark: #0d0d0d;
+  --gold: #c9a96e;
+  --gold-light: #d4b47e;
+  --text: #f0ece4;
+  --card: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.12);
+}
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* ── Welcome ── */
+#welcome {
+  background: radial-gradient(ellipse at 50% 40%, rgba(201,169,110,0.12) 0%, transparent 65%), #0d0d0d;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Decorative border frame */
+.welcome-frame {
+  position: absolute;
+  inset: clamp(16px, 3.5vw, 44px);
+  border: 1px solid rgba(201,169,110,0.16);
+  pointer-events: none;
+  animation: frame-in 1.4s ease both;
+}
+@keyframes frame-in {
+  from { opacity: 0; transform: scale(1.015); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Corner brackets */
+.fc {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-color: rgba(201,169,110,0.7);
+  border-style: solid;
+}
+.fc.tl { top: -1px;    left: -1px;  border-width: 2px 0 0 2px; }
+.fc.tr { top: -1px;    right: -1px; border-width: 2px 2px 0 0; }
+.fc.bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; }
+.fc.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+/* Mid-edge tick marks */
+.fm {
+  position: absolute;
+  background: rgba(201,169,110,0.35);
+}
+.fm.h { width: 16px; height: 1px; top: -1px; left: 50%; transform: translateX(-50%); }
+.fm.hb { top: auto; bottom: -1px; }
+.fm.v { width: 1px; height: 16px; left: -1px; top: 50%; transform: translateY(-50%); }
+.fm.vr { left: auto; right: -1px; }
+
+/* Eyebrow with flanking lines */
+.welcome-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  opacity: 0.75;
+}
+.welcome-eyebrow::before,
+.welcome-eyebrow::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: rgba(201,169,110,0.5);
+}
+
+/* Centre ornament between eyebrow and title */
+.welcome-ornament {
+  font-size: 15px;
+  color: var(--gold);
+  letter-spacing: 10px;
+  margin-bottom: 20px;
+  opacity: 0.55;
+}
+.welcome-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(52px, 9vw, 104px);
+  font-weight: 700;
+  line-height: 1.15;
+  padding-bottom: 0.05em;
+  margin-bottom: 16px;
+  background: linear-gradient(145deg, #f0ece4 30%, #c9a96e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: font-weight 0.3s ease, font-style 0.3s ease;
+}
+.welcome-title.en {
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.5px;
+}
+.welcome-title-en {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 400;
+  color: rgba(240,236,228,0.35);
+  margin-bottom: 40px;
+}
+.welcome-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(240,236,228,0.5);
+  letter-spacing: 1px;
+  margin-bottom: 56px;
+}
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 44px;
+  background: var(--gold);
+  color: #0d0d0d;
+  border: none;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.start-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 36px rgba(201,169,110,0.35);
+}
+
+/* ── Quiz ── */
+#quiz {
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background:
+    radial-gradient(ellipse at 15% 50%, rgba(201,169,110,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 50%, rgba(110,150,201,0.04) 0%, transparent 55%),
+    #0d0d0d;
+}
+
+.progress {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  gap: 3px;
+}
+.progress-bar {
+  height: 2px;
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.6s ease;
+}
+.progress-bar.done { background: var(--gold); }
+
+.q-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 660px;
+  text-align: center;
+}
+.q-step {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+  opacity: 0.8;
+}
+.q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 400;
+  line-height: 1.45;
+  margin-bottom: 44px;
+}
+.options { display: flex; flex-direction: column; gap: 14px; }
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  backdrop-filter: blur(20px);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all 0.25s ease;
+}
+.opt:hover {
+  background: rgba(201,169,110,0.11);
+  border-color: rgba(201,169,110,0.45);
+  transform: translateX(8px);
+}
+.opt:hover .opt-icon { transform: scale(1.2); }
+.opt-icon { font-size: 26px; flex-shrink: 0; transition: transform 0.25s ease; }
+.opt-text { font-size: 16px; font-weight: 300; letter-spacing: 0.5px; }
+
+/* ── Loading ── */
+#loading {
+  background: #0d0d0d;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+.loading-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--gold);
+  animation: fade-pulse 2s ease-in-out infinite;
+}
+.dots { display: flex; gap: 9px; }
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: bounce 1.4s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%,80%,100% { transform: scale(0.4); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+@keyframes fade-pulse {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ── Result ── */
+#result { background: #000; }
+
+.carousel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.carousel-slide.active { opacity: 1; }
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #1a1a1a 25%, #252525 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.carousel-slide img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  transform: scale(1.04);
+  transition: opacity 0.9s ease, transform 5s ease;
+}
+.carousel-slide.active img { transform: scale(1); }
+.carousel-slide img.in { opacity: 1; }
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.carousel-arrow:hover { background: rgba(255,255,255,0.25); }
+.carousel-prev { left: 28px; }
+.carousel-next { right: 28px; }
+
+.carousel-dots {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: none; /* 隐藏 - 只有1张照片 */
+  gap: 6px;
+}
+.carousel-dot {
+  width: 28px; height: 2px;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: background 0.35s ease, width 0.35s ease;
+}
+.carousel-dot.active { background: #fff; width: 44px; }
+
+.result-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 38%, transparent 65%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.result-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 44px 52px;
+  z-index: 20;
+}
+.r-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(44px, 7vw, 92px);
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, #fff 40%, #c9a96e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.r-sub {
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+.r-desc {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(240,236,228,0.82);
+  max-width: 520px;
+  margin-bottom: 20px;
+}
+.r-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+.r-tag {
+  padding: 5px 13px;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.18);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  color: rgba(240,236,228,0.75);
+  backdrop-filter: blur(8px);
+}
+.r-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.abtn {
+  padding: 13px 26px;
+  border: none;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.abtn-primary { background: var(--gold); color: #0d0d0d; }
+.abtn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(201,169,110,0.4);
+}
+.abtn-secondary {
+  background: rgba(255,255,255,0.09);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+}
+.abtn-secondary:hover { background: rgba(255,255,255,0.16); transform: translateY(-2px); }
+.abtn-ghost {
+  background: transparent;
+  color: rgba(240,236,228,0.55);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.abtn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.28); transform: translateY(-2px); }
+
+/* saved toast */
+.toast {
+  position: fixed;
+  bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(201,169,110,0.95);
+  color: #0d0d0d;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Language toggle ── */
+.lang-toggle {
+  position: absolute;
+  top: 28px; right: 36px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+.lang-btn {
+  padding: 5px 13px;
+  background: transparent;
+  border: 1px solid rgba(201,169,110,0.25);
+  color: rgba(240,236,228,0.45);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.lang-btn.active {
+  background: rgba(201,169,110,0.14);
+  border-color: rgba(201,169,110,0.6);
+  color: var(--gold);
+}
+.lang-btn:hover:not(.active) {
+  border-color: rgba(201,169,110,0.4);
+  color: rgba(240,236,228,0.75);
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .photos-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1.3fr 1fr 1fr;
+  }
+  .photo-cell:first-child {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+  }
+  .result-info { padding: 28px 22px; }
+  .r-actions { flex-direction: column; }
+  .abtn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Welcome -->
+<div id="welcome" class="screen active">
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+  <div class="welcome-frame" aria-hidden="true">
+    <span class="fc tl"></span>
+    <span class="fc tr"></span>
+    <span class="fc bl"></span>
+    <span class="fc br"></span>
+    <span class="fm h"></span>
+    <span class="fm h hb"></span>
+    <span class="fm v"></span>
+    <span class="fm v vr"></span>
+  </div>
+  <div class="welcome-eyebrow">Travel Muse</div>
+  <div class="welcome-ornament">✦ ✦ ✦</div>
+  <h1 class="welcome-title" id="welcome-title">旅行靈感</h1>
+  <div class="welcome-title-en">Find Your Next Destination</div>
+  <p class="welcome-sub" id="welcome-tagline">三個問題，一座屬於你的城市</p>
+  <button class="start-btn" id="start-btn" onclick="startQuiz()">開始探索 →</button>
+</div>
+
+<!-- Quiz -->
+<div id="quiz" class="screen">
+  <div class="progress" id="progress">
+    <div class="progress-bar"></div>
+    <div class="progress-bar"></div>
+    <div class="progress-bar"></div>
+  </div>
+  <div class="q-wrap" id="qWrap"></div>
+</div>
+
+<!-- Loading -->
+<div id="loading" class="screen">
+  <div class="loading-label" id="loading-label">正在尋找你的城市⋯</div>
+  <div class="dots">
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+</div>
+
+<!-- Result -->
+<div id="result" class="screen">
+  <div class="carousel" id="photosGrid"></div>
+  <div class="carousel-dots" id="carouselDots"></div>
+  <div class="result-overlay"></div>
+  <div class="result-info" id="resultInfo"></div>
+</div>
+
+<div class="toast" id="toast">已收藏，享受你的旅程 ✦</div>
+
+<script>
+const UNSPLASH_API_KEY = 'tvN5r7TY35ijSxAK2ryKxN22UGXMmyTNy6OKXbtGuWA';
+
+let lang = 'zh';
+
+const questions = {
+  zh: [
+    {
+      step: "第一題 · 旅行感受",
+      text: "此刻，你最渴望什麼樣的旅行？",
+      opts: [
+        { icon: "🌊", text: "完全放空，讓靈魂好好休息", val: "relax" },
+        { icon: "⚡", text: "充滿刺激，迎接嶄新挑戰", val: "adventure" },
+        { icon: "🏛️", text: "深入文化，感受異鄉的靈魂", val: "culture" }
+      ]
+    },
+    {
+      step: "第二題 · 飲食偏好",
+      text: "你最期待哪種飲食體驗？",
+      opts: [
+        { icon: "🦞", text: "新鮮海味，清爽輕盈的料理", val: "seafood" },
+        { icon: "🍜", text: "街頭小吃，熱鬧多元的風味", val: "street" },
+        { icon: "☕", text: "精緻餐廳，細膩的咖啡文化", val: "fine" }
+      ]
+    },
+    {
+      step: "第三題 · 環境氛圍",
+      text: "你嚮往哪種旅行環境？",
+      opts: [
+        { icon: "🏖️", text: "海灘陽光，碧藍無垠的海水", val: "beach" },
+        { icon: "🌃", text: "繁華都市，璀璨迷人的夜晚", val: "city" },
+        { icon: "🌿", text: "山林古鎮，靜謐的自然風光", val: "nature" }
+      ]
+    }
+  ],
+  en: [
+    {
+      step: "Question 1 · Mood",
+      text: "What kind of travel experience do you crave right now?",
+      opts: [
+        { icon: "🌊", text: "Total relaxation — switch off completely", val: "relax" },
+        { icon: "⚡", text: "Thrill and adventure — embrace new challenges", val: "adventure" },
+        { icon: "🏛️", text: "Cultural immersion — feel the soul of a place", val: "culture" }
+      ]
+    },
+    {
+      step: "Question 2 · Food",
+      text: "What dining experience excites you most?",
+      opts: [
+        { icon: "🦞", text: "Fresh seafood and light coastal flavours", val: "seafood" },
+        { icon: "🍜", text: "Street food and vibrant local markets", val: "street" },
+        { icon: "☕", text: "Fine dining and café culture", val: "fine" }
+      ]
+    },
+    {
+      step: "Question 3 · Setting",
+      text: "What kind of environment are you drawn to?",
+      opts: [
+        { icon: "🏖️", text: "Beaches, sunshine and crystal-clear water", val: "beach" },
+        { icon: "🌃", text: "Buzzing city lights and nightlife", val: "city" },
+        { icon: "🌿", text: "Mountains, forests and quiet nature", val: "nature" }
+      ]
+    }
+  ]
+};
+
+const cities = {
+  maldives: {
+    name:"馬爾地夫", sub:"Maldives · 印度洋",
+    nameEn:"Maldives", subEn:"Maldives · Indian Ocean",
+    desc:"清透見底的海水，純白沙灘，水上屋靜靜漂浮在蔚藍礁湖之上——馬爾地夫是地球上離天堂最近的地方。在這裡，時間會慢下來，讓你忘記所有壓力，只剩下海風與陽光。",
+    descEn:"Crystal-clear lagoons, powder-white sand and overwater bungalows above turquoise reefs — the Maldives is the closest place on Earth to paradise. Time slows here, and the only things left are sea breeze and sunlight.",
+    tags:["🌊 水上屋","🤿 珊瑚浮潛","🌅 絕美日落"],
+    tagsEn:["🌊 Overwater Villas","🤿 Snorkelling","🌅 Stunning Sunsets"],
+    queries:["maldives overwater bungalow","maldives turquoise ocean","maldives white sand beach","maldives coral reef underwater","maldives sunset lagoon"]
+  },
+  lisbon: {
+    name:"里斯本", sub:"Lisbon · 葡萄牙",
+    nameEn:"Lisbon", subEn:"Lisbon · Portugal",
+    desc:"七座山丘上的古老城市，黃色電車穿梭於彩色瓷磚之間，大西洋的鹽味混著烤沙丁魚的香氣飄散街巷。夕陽染紅特茹河面，Fado 哀愁的旋律在空氣中久久迴盪。",
+    descEn:"Seven hills, golden trams winding past azulejo-tiled walls, and the Atlantic salt air mixing with grilled sardines — Lisbon is an ancient city with an unhurried soul. As the sun sets over the Tagus, the melancholic notes of Fado drift through the evening air.",
+    tags:["🚋 古典電車","🐟 新鮮海鮮","🎵 Fado 音樂"],
+    tagsEn:["🚋 Vintage Trams","🐟 Fresh Seafood","🎵 Fado Music"],
+    queries:["lisbon tram yellow street","lisbon alfama colorful tiles","lisbon tagus river sunset","lisbon seafood sardines","belem tower portugal"]
+  },
+  amalfi: {
+    name:"阿瑪菲海岸", sub:"Amalfi Coast · 義大利",
+    nameEn:"Amalfi Coast", subEn:"Amalfi Coast · Italy",
+    desc:"懸崖上的彩色小屋倒映在地中海碧藍的水面，每一個轉角都是一幅明信片。新鮮龍蝦配上冰涼的白葡萄酒，海風輕撫，這是你對「完美」最具體的想像。",
+    descEn:"Colourful clifftop villages tumble down to the Mediterranean, and every corner looks like a postcard. Fresh lobster with chilled white wine, a sea breeze in your hair — the Amalfi Coast is your most vivid idea of perfection.",
+    tags:["🏔️ 懸崖小鎮","🦞 地中海料理","🛥️ 遊艇出海"],
+    tagsEn:["🏔️ Clifftop Villages","🦞 Mediterranean Cuisine","🛥️ Boat Trips"],
+    queries:["amalfi coast italy cliffside","positano colorful houses sea","amalfi mediterranean water","capri blue grotto italy","ravello garden terrace view"]
+  },
+  bali: {
+    name:"峇里島", sub:"Bali · 印尼",
+    nameEn:"Bali", subEn:"Bali · Indonesia",
+    desc:"神廟的香煙與熱帶花朵的芬芳交織，稻田梯田在晨霧中閃爍綠光。夜市沙嗲的炭火香氣，還有無邊際泳池在叢林中靜靜守候——峇里島讓你同時感受靜謐與熱帶活力。",
+    descEn:"Temple incense and tropical flowers perfume the air, while terraced rice fields shimmer in the morning mist. Night market satay, jungle infinity pools and warm Balinese hospitality make this island both serene and electric.",
+    tags:["🌺 印度教文化","🍢 沙嗲烤肉","🌿 叢林泳池"],
+    tagsEn:["🌺 Hindu Culture","🍢 Satay & Street Food","🌿 Jungle Pools"],
+    queries:["bali temple sunset ceremony","bali rice terraces ubud morning","bali seminyak beach sunset","bali street food night market","bali infinity pool jungle"]
+  },
+  singapore: {
+    name:"新加坡", sub:"Singapore · 東南亞",
+    nameEn:"Singapore", subEn:"Singapore · Southeast Asia",
+    desc:"花園城市裡，摩天樓與熱帶植物共生，夜幕後濱海灣沙的燈光如夢似幻。小販中心裡海南雞飯、肉骨茶、炒粿條的香氣，讓你在一個城市嚐遍整個東南亞。",
+    descEn:"A garden city where glass towers and tropical trees coexist seamlessly, and Marina Bay glows like a dream at night. The hawker centres serve Hainanese chicken rice, bak kut teh and char kway teow — an entire continent on a single tray.",
+    tags:["🌆 濱海灣夜景","🍜 小販中心","🌿 超級樹叢林"],
+    tagsEn:["🌆 Marina Bay","🍜 Hawker Centres","🌿 City in a Garden"],
+    queries:["singapore marina bay sands night","singapore gardens by the bay","singapore hawker food","singapore chinatown street","singapore merlion harbor"]
+  },
+  chiangmai: {
+    name:"清邁", sub:"Chiang Mai · 泰國",
+    nameEn:"Chiang Mai", subEn:"Chiang Mai · Thailand",
+    desc:"古城牆圍繞的千年古都，夜市燈籠如星星般點亮每條街道，空氣瀰漫香茅與椰奶的氣息。白廟金廟與晨鐘暮鼓，讓旅人在大山懷抱中，找回遺失已久的平靜。",
+    descEn:"An ancient walled city ringed by misty mountains, where night market lanterns glow like constellations and the air smells of lemongrass and coconut milk. Golden temples and morning bells invite you to breathe deeply and slow down.",
+    tags:["🏯 古城牆","🏮 天燈節","🧘 山中寺廟"],
+    tagsEn:["🏯 Ancient City Walls","🏮 Yi Peng Lanterns","🧘 Mountain Temples"],
+    queries:["chiang mai temple thailand","chiang mai night market lanterns","doi inthanon mountain fog thailand","chiang mai street food market","chiang mai yi peng lantern festival"]
+  },
+  santorini: {
+    name:"聖托里尼", sub:"Santorini · 希臘",
+    nameEn:"Santorini", subEn:"Santorini · Greece",
+    desc:"白色穹頂教堂與蔚藍海洋的經典對比，是攝影師永遠無法拍夠的畫面。伊亞村的日落被列為全球最美，配上一杯冰涼的希臘白酒，這一刻不需要任何言語。",
+    descEn:"Blue-domed churches against an impossibly blue sea — Santorini's iconic silhouette never loses its magic. The sunset at Oia is among the world's most beautiful, best enjoyed with a glass of crisp local wine in hand.",
+    tags:["⛪ 藍頂教堂","🍷 希臘白酒","🌅 伊亞日落"],
+    tagsEn:["⛪ Blue Dome Churches","🍷 Greek Wine","🌅 Oia Sunset"],
+    queries:["santorini oia sunset blue dome","santorini white cyclades church","santorini caldera view","santorini cliffside village night","santorini wine sea view"]
+  },
+  copenhagen: {
+    name:"哥本哈根", sub:"Copenhagen · 丹麥",
+    nameEn:"Copenhagen", subEn:"Copenhagen · Denmark",
+    desc:"全球最幸福城市之一，NOMA 革命性料理的誕生地。彩色房屋映在運河水面，自行車穿越設計精良的街道，北歐極簡美學滲透日常每一個細節。",
+    descEn:"One of the world's happiest cities and birthplace of New Nordic cuisine, where colourful townhouses reflect in the canal and every café is a masterclass in hygge. Bicycles glide through beautifully designed streets that feel thoughtful at every turn.",
+    tags:["🚲 單車之都","🍽️ 北歐美食","🎨 設計王國"],
+    tagsEn:["🚲 Cycling City","🍽️ Nordic Cuisine","🎨 Design Capital"],
+    queries:["copenhagen nyhavn colorful canal","copenhagen denmark waterfront","nordic food restaurant plating","copenhagen bicycle street","copenhagen modern architecture design"]
+  },
+  kyoto: {
+    name:"京都", sub:"Kyoto · 日本",
+    nameEn:"Kyoto", subEn:"Kyoto · Japan",
+    desc:"千座神社守護這座千年古都，竹林小徑在晨光中披著銀霧，抹茶與豆腐的清淡滋味讓舌頭沉靜下來。四季流轉，每個時節的京都都是一首不同的詩。",
+    descEn:"A thousand shrines guard this thousand-year-old capital, and bamboo groves are silvered with morning mist. Matcha, tofu and the quiet ceremony of tea coax the mind into stillness — every season reveals a different poem.",
+    tags:["⛩️ 千座神社","🍵 抹茶文化","🎋 嵐山竹林"],
+    tagsEn:["⛩️ A Thousand Shrines","🍵 Tea Ceremony","🎋 Arashiyama Bamboo"],
+    queries:["kyoto fushimi inari shrine gates","kyoto arashiyama bamboo grove","kyoto geisha gion district","kyoto matcha tea ceremony","kyoto autumn leaves temple"]
+  },
+  sydney: {
+    name:"雪梨", sub:"Sydney · 澳洲",
+    nameEn:"Sydney", subEn:"Sydney · Australia",
+    desc:"歌劇院的白帆在海港灣升起，邦代海灘的浪花追著衝浪者奔跑。這座城市把自然與都市融合得無縫，從岩石小灣到繁華街區，每個人都能在雪梨找到屬於自己的節奏。",
+    descEn:"The white sails of the Opera House rise above one of the world's great harbours, while Bondi Beach hums with surfers and salt air. Sydney blends wild nature with cosmopolitan energy in a way few cities ever manage.",
+    tags:["🦘 邦代海灘","🦞 澳洲海鮮","🏄 衝浪文化"],
+    tagsEn:["🦘 Bondi Beach","🦞 Australian Seafood","🏄 Surf Culture"],
+    queries:["sydney opera house harbour","bondi beach surf waves","sydney seafood fish market","sydney harbour bridge aerial","sydney manly beach ocean pool"]
+  },
+  barcelona: {
+    name:"巴塞隆納", sub:"Barcelona · 西班牙",
+    nameEn:"Barcelona", subEn:"Barcelona · Spain",
+    desc:"高第的鬼才建築在城市各處綻放，聖家堂的彩色玻璃窗在陽光下如夢境般發光。拉博克里亞市場的海鮮、塔帕斯配桑格利亞，這座城市讓所有感官同時沸騰。",
+    descEn:"Gaudí's visionary architecture blooms across the city, and the Sagrada Família's stained glass turns sunlight into a miracle. La Boqueria's seafood, tapas and sangria ignite every sense — Barcelona refuses to be boring.",
+    tags:["🏛️ 高第建築","🦐 海鮮塔帕斯","🎭 佛朗明哥"],
+    tagsEn:["🏛️ Gaudí Architecture","🦐 Tapas & Seafood","🎭 Flamenco"],
+    queries:["barcelona sagrada familia gaudi","barcelona park guell mosaic","barcelona tapas seafood paella","barcelona gothic quarter street","la boqueria market barcelona"]
+  },
+  queenstown: {
+    name:"皇后鎮", sub:"Queenstown · 紐西蘭",
+    nameEn:"Queenstown", subEn:"Queenstown · New Zealand",
+    desc:"被雪山與湖泊擁抱的冒險之都，蹦極、高空跳傘、噴射船在此發明。瓦卡蒂普湖的倒影清晰如鏡，讓人在腎上腺素消退後，感受到靜謐到窒息的美麗。",
+    descEn:"The adventure capital of the world, cradled by snow-capped peaks and mirrored lakes where bungee jumping and skydiving were born. When the adrenaline fades, Lake Wakatipu's silence is breathtaking in an entirely different way.",
+    tags:["🪂 高空跳傘","🏔️ 雪山湖泊","🏔️ 南島峽灣"],
+    tagsEn:["🪂 Skydiving","🏔️ Mountain Lakes","🏔️ South Island Fjords"],
+    queries:["queenstown new zealand lake wakatipu","queenstown bungee jump adventure","remarkables mountain reflection lake","queenstown snowfield skiing","milford sound fiord new zealand"]
+  },
+  rio: {
+    name:"里約熱內盧", sub:"Rio de Janeiro · 巴西",
+    nameEn:"Rio de Janeiro", subEn:"Rio de Janeiro · Brazil",
+    desc:"基督像俯瞰整座城市，山、海、森林以不可思議的密度共存。伊帕內瑪的陽光打在古銅膚色的身體上，森巴的鼓點從每個街角滲出，這座城市永遠不缺生命力。",
+    descEn:"Christ the Redeemer watches over a city where mountains, sea and forest coexist in extraordinary proximity. Sun-bronzed bodies on Ipanema, samba rhythms seeping from every corner — Rio pulses with an irresistible life force.",
+    tags:["⛰️ 基督像","🏖️ 伊帕內瑪","🥁 嘉年華節慶"],
+    tagsEn:["⛰️ Christ the Redeemer","🏖️ Ipanema Beach","🥁 Carnival & Samba"],
+    queries:["rio de janeiro christ redeemer","ipanema beach sunset rio","rio carnival samba colorful","rio sugarloaf mountain view","copacabana beach rio night"]
+  },
+  tokyo: {
+    name:"東京", sub:"Tokyo · 日本",
+    nameEn:"Tokyo", subEn:"Tokyo · Japan",
+    desc:"全球密度最高的美食城市，從米其林三星到深夜拉麵攤，每一口都是認真的藝術。霓虹燈在雨夜反射漣漪，古老神社靜立於摩天高樓之間——東京把矛盾變成了魅力。",
+    descEn:"The world's most densely rewarding food city, where a Michelin-starred meal sits a block from a perfect midnight ramen. Neon lights shimmer in rain-soaked streets while ancient shrines stand serenely between skyscrapers — Tokyo turns contradictions into charm.",
+    tags:["🍜 拉麵文化","🌸 霓虹夜景","⛩️ 都市神社"],
+    tagsEn:["🍜 Ramen Culture","🌸 Neon Nightlife","⛩️ Urban Shrines"],
+    queries:["tokyo shibuya crossing night neon","tokyo ramen restaurant food","tokyo shinjuku neon lights rain","tokyo senso ji temple","tokyo tsukiji sushi market"]
+  },
+  taipei: {
+    name:"台北", sub:"Taipei · 台灣",
+    nameEn:"Taipei", subEn:"Taipei · Taiwan",
+    desc:"夜市的叫賣聲、山頂涼亭的雨聲、捷運的清脆提示音——台北是一座用聲音就能認出的城市。珍珠奶茶、滷肉飯、九份山城的燈籠，在世界上再也找不到第二個這樣的地方。",
+    descEn:"Night markets, mountain tea houses and the world's best bubble tea all in one city that feels effortlessly familiar. Xiaolongbao, beef noodle soup and the lanterns of Jiufen hillside — Taipei's street food culture has a soul impossible to replicate.",
+    tags:["🧋 珍珠奶茶","🏮 九份夜景","🗻 陽明山"],
+    tagsEn:["🧋 Bubble Tea","🏮 Jiufen Lanterns","🗻 Yangmingshan"],
+    queries:["taipei night market street food","taipei 101 skyline","jiufen lantern taiwan mountain","taipei bubble tea drink","yangmingshan volcano mountain taipei"]
+  },
+  miami: {
+    name:"邁阿密", sub:"Miami · 美國",
+    nameEn:"Miami", subEn:"Miami · USA",
+    desc:"Art Deco 粉彩建築面對南灘的藍天，古巴與加勒比海的節奏讓海風都跟著搖擺。精緻餐廳與藝廊在 Wynwood 塗鴉牆之間並存，這座城市是美麗、多元、永不停歇的派對。",
+    descEn:"Pastel Art Deco buildings face South Beach's blue skies, and the Cuban and Caribbean pulse makes even the sea breeze dance. Wynwood's murals, rooftop bars and world-class restaurants make Miami the ultimate party that never stops looking beautiful.",
+    tags:["🌴 南灘陽光","🎨 Wynwood 藝術","🎵 拉丁音樂"],
+    tagsEn:["🌴 South Beach","🎨 Wynwood Arts","🎵 Latin Music"],
+    queries:["miami south beach art deco","wynwood walls murals miami","miami ocean drive sunset palm","miami brickell skyline night","miami beach turquoise water"]
+  },
+  newyork: {
+    name:"紐約", sub:"New York · 美國",
+    nameEn:"New York", subEn:"New York · USA",
+    desc:"高樓峽谷間每個人都在追逐自己的版本的夢。百老匯的燈光、中央公園的秋葉、深夜的 Katz's 熟牛肉三明治——紐約是一座你每次到訪都能發現不同故事的城市。",
+    descEn:"Between glass canyons, everyone is chasing their own version of the dream. Broadway lights, Central Park in autumn gold, a late-night pastrami sandwich — New York reveals a new story on every visit.",
+    tags:["🗽 自由女神","🎭 百老匯","🥩 精緻美食"],
+    tagsEn:["🗽 Statue of Liberty","🎭 Broadway","🥩 Fine Dining"],
+    queries:["new york manhattan skyline","central park autumn new york","times square new york night","new york brooklyn bridge aerial","new york fine dining restaurant"]
+  },
+  vancouver: {
+    name:"溫哥華", sub:"Vancouver · 加拿大",
+    nameEn:"Vancouver", subEn:"Vancouver · Canada",
+    desc:"雪山倒映在碧綠海灣，史丹利公園的紅杉林高聳入雲。海鮮市場、農夫市集的有機蔬果——這座城市以自然為信仰，把清新和精緻過成了日常。",
+    descEn:"Snow-capped mountains reflect in an emerald harbour, and Stanley Park's ancient cedars reach toward the sky. Pacific seafood, organic farmers' markets and mountain-fresh air — Vancouver makes clean and beautiful feel like everyday life.",
+    tags:["🏔️ 雪山海灣","🌲 史丹利公園","🦞 太平洋海鮮"],
+    tagsEn:["🏔️ Mountain Harbour","🌲 Stanley Park","🦞 Pacific Seafood"],
+    queries:["vancouver mountains harbor skyline","stanley park vancouver redwood","granville island market vancouver","whistler mountain ski snow","vancouver sunset beach ocean"]
+  },
+  dubrovnik: {
+    name:"杜布羅夫尼克", sub:"Dubrovnik · 克羅埃西亞",
+    nameEn:"Dubrovnik", subEn:"Dubrovnik · Croatia",
+    desc:"「亞得里亞海的珍珠」，橙紅屋頂與碧藍海水對比鮮明，城牆上漫步可俯瞰整座古城全景。烤章魚佐本地橄欖油，配上克羅埃西亞白酒，這裡的悠閒是中世紀留下的禮物。",
+    descEn:"The Pearl of the Adriatic — terracotta rooftops and blue sea in perfect contrast, with ancient city walls offering a panorama that stops you in your tracks. Grilled octopus with local olive oil and Croatian white wine make this medieval city feel timeless.",
+    tags:["🏰 古城牆","🐙 烤章魚","⚓ 亞得里亞海"],
+    tagsEn:["🏰 Ancient City Walls","🐙 Grilled Octopus","⚓ Adriatic Sea"],
+    queries:["dubrovnik old town walls aerial","dubrovnik adriatic sea view blue","croatia seafood octopus grilled","dubrovnik orange rooftops church","hvar island croatia sea yacht"]
+  },
+  istanbul: {
+    name:"伊斯坦堡", sub:"Istanbul · 土耳其",
+    nameEn:"Istanbul", subEn:"Istanbul · Turkey",
+    desc:"跨越歐亞兩大陸，博斯普魯斯海峽的白色渡輪連接兩個世界。藍色清真寺的宣禮聲在清晨升起，大巴扎的香料氣味讓人迷失，烤魚配石榴汁是最美味的文明交匯點。",
+    descEn:"Straddling Europe and Asia, where white ferries cross the Bosphorus between two worlds. The Blue Mosque's call to prayer rises at dawn, the Grand Bazaar intoxicates with spice, and a grilled fish with pomegranate juice is the most delicious meeting of civilisations.",
+    tags:["🕌 藍色清真寺","🐟 博斯普魯斯","🧅 大巴扎"],
+    tagsEn:["🕌 Blue Mosque","🐟 Bosphorus","🧅 Grand Bazaar"],
+    queries:["istanbul hagia sophia blue mosque","istanbul bosphorus strait sunset","istanbul grand bazaar spices","istanbul turkish food street","istanbul galata tower night"]
+  },
+  bergen: {
+    name:"卑爾根", sub:"Bergen · 挪威",
+    nameEn:"Bergen", subEn:"Bergen · Norway",
+    desc:"峽灣之城，木造彩色房屋 Bryggen 在水邊守護這座古港。魚市場的新鮮三文魚幾乎從水中直接到盤子，雨霧中的山纜車帶你俯瞰整個城市與峽灣的壯闊。",
+    descEn:"A fjord city where the colourful Bryggen wharf has guarded this ancient Hanseatic port for centuries. The fish market serves salmon so fresh it barely left the water, and the funicular through mountain mist reveals a breathtaking panorama of city and fjord.",
+    tags:["🏔️ 峽灣風景","🐟 三文魚市場","🎨 彩色木屋"],
+    tagsEn:["🏔️ Fjord Scenery","🐟 Salmon Market","🎨 Colourful Wharf"],
+    queries:["bergen norway bryggen wharf","bergen fjord mountain view","bergen fish market salmon norway","norway fjord misty mountain","bergen funicular panorama view"]
+  },
+  havana: {
+    name:"哈瓦那", sub:"Havana · 古巴",
+    nameEn:"Havana", subEn:"Havana · Cuba",
+    desc:"時光彷彿靜止於 1950 年代——彩色老爺車穿過殖民地建築巷弄，莫希托的薄荷與蘭姆酒在舌尖冒泡。海濱大道上薩爾薩舞的節奏在鹹濕空氣中流動，這座城市用音樂說話。",
+    descEn:"Time seems frozen in the 1950s — vintage American cars cruise past colonial buildings, and mojitos bubble with mint and rum on every terrace. Salsa rhythms drift along the seafront Malecón, and this city speaks entirely in music.",
+    tags:["🚗 復古老爺車","🎵 薩爾薩音樂","🍹 莫希托調酒"],
+    tagsEn:["🚗 Vintage Cars","🎵 Salsa Music","🍹 Mojitos"],
+    queries:["havana cuba classic car colorful","havana malecon seafront sunset","havana colonial buildings colorful","cuba street music salsa dance","havana mojito cigar bar"]
+  },
+  seoul: {
+    name:"首爾", sub:"Seoul · 韓國",
+    nameEn:"Seoul", subEn:"Seoul · South Korea",
+    desc:"K-pop 的聖地，卻也有漢江邊靜謐的茅草屋和千年古宮。深夜的韓式烤肉、一杯燒酒、弘大的獨立小店——首爾把傳統與流行的邊界模糊到幾乎消失。",
+    descEn:"The birthplace of K-pop, yet the Han River banks are lined with serene pavilions and thousand-year-old palaces. Late-night Korean BBQ, shots of soju and Hongdae's indie boutiques — Seoul blurs the line between tradition and pop culture until it disappears.",
+    tags:["🎤 K-pop 聖地","🥩 韓式烤肉","🏛️ 景福宮"],
+    tagsEn:["🎤 K-pop Capital","🥩 Korean BBQ","🏛️ Gyeongbokgung"],
+    queries:["seoul gyeongbokgung palace night","seoul myeongdong street lights","seoul korean bbq restaurant","bukchon hanok village seoul","seoul han river city skyline"]
+  },
+  luangprabang: {
+    name:"琅勃拉邦", sub:"Luang Prabang · 寮國",
+    nameEn:"Luang Prabang", subEn:"Luang Prabang · Laos",
+    desc:"湄公河兩岸的橘色袈裟在晨曦中遊走，是地球上最虔誠的日常儀式。木刻佛塔隱沒在熱帶植被中，法式殖民地咖啡館散發著老煙味——琅勃拉邦是被時間善待的古都。",
+    descEn:"Saffron-robed monks glide along the Mekong at dawn in one of the Earth's most serene daily rituals. Ancient stupas emerge from tropical greenery, and French-colonial cafés carry an unhurried, timeless atmosphere — a city that time has treated kindly.",
+    tags:["🙏 晨間托缽","🌊 湄公河","💧 光西瀑布"],
+    tagsEn:["🙏 Morning Alms","🌊 Mekong River","💧 Kuang Si Falls"],
+    queries:["luang prabang monks alms ceremony","luang prabang mekong river sunset","luang prabang temple wat laos","luang prabang street market night","kuang si waterfall blue laos"]
+  },
+  nice: {
+    name:"尼斯", sub:"Nice · 法國",
+    nameEn:"Nice", subEn:"Nice · France",
+    desc:"蔚藍海岸的皇后城市，英國人海濱大道棕櫚樹成排，地中海光線讓每件事物閃閃發光。舊城市集的醃橄欖、普羅旺斯香草、鮮紅的尼斯沙拉，飲食就是這裡最美的藝術。",
+    descEn:"The queen of the Côte d'Azur, where palm-lined promenades face an impossibly blue sea and Mediterranean light makes everything shimmer. Marinated olives, Provençal herbs and a salade niçoise from the old market — here, food is the finest art form.",
+    tags:["🌊 蔚藍海岸","🫒 地中海料理","🎨 馬諦斯美術館"],
+    tagsEn:["🌊 French Riviera","🫒 Mediterranean Food","🎨 Matisse Museum"],
+    queries:["nice france promenade anglais","cote d azur mediterranean coast","nice old town market france","monaco coastline aerial view","nice beach pebbles blue sea france"]
+  },
+  vienna: {
+    name:"維也納", sub:"Vienna · 奧地利",
+    nameEn:"Vienna", subEn:"Vienna · Austria",
+    desc:"哈布斯堡王朝留下的金色宮廷，莫札特的音符至今仍飄蕩在每個石板廣場。維也納咖啡館文化是 UNESCO 無形文化遺產，一杯 Melange 配一塊薩赫蛋糕，就是最精緻的下午。",
+    descEn:"The Habsburg palaces left behind gilded grandeur where Mozart's notes still seem to echo in every cobbled square. Vienna's coffee house culture is a UNESCO intangible heritage — a Melange and a slice of Sachertorte is the most refined afternoon imaginable.",
+    tags:["🎻 古典音樂","☕ 咖啡館文化","🏛️ 皇家宮廷"],
+    tagsEn:["🎻 Classical Music","☕ Coffee House Culture","🏛️ Imperial Palaces"],
+    queries:["vienna schonbrunn palace garden","vienna opera house night","vienna coffee house sachertorte","vienna kunsthistorisches museum","vienna belvedere palace"]
+  },
+  salzburg: {
+    name:"薩爾茨堡", sub:"Salzburg · 奧地利",
+    nameEn:"Salzburg", subEn:"Salzburg · Austria",
+    desc:"莫札特的故鄉，大主教宮殿倒映在薩爾查赫河水面，阿爾卑斯山脈在遠方勾勒出天際線。音樂節的夏天，整座城市就是一個巨大的露天音樂廳。",
+    descEn:"Mozart's birthplace, where the Archbishop's palace reflects in the Salzach and the Alps sketch the horizon. During the summer music festival, the entire city becomes an open-air concert hall unlike any other in the world.",
+    tags:["🎼 莫札特故鄉","🏔️ 阿爾卑斯山","🏰 霍亨薩爾茨堡"],
+    tagsEn:["🎼 Mozart's Birthplace","🏔️ Alpine Scenery","🏰 Hohensalzburg Fortress"],
+    queries:["salzburg old town alps austria","hohensalzburg fortress salzburg","salzburg mirabell garden palace","salzkammergut lake mountain austria","austria alpine village mountain"]
+  }
+};
+
+const cityMap = {
+  relax_seafood_beach:      ["maldives","santorini"],
+  relax_seafood_city:       ["lisbon","nice"],
+  relax_seafood_nature:     ["amalfi","bergen"],
+  relax_street_beach:       ["bali","havana"],
+  relax_street_city:        ["singapore","taipei"],
+  relax_street_nature:      ["chiangmai","luangprabang"],
+  relax_fine_beach:         ["santorini","maldives"],
+  relax_fine_city:          ["copenhagen","vienna"],
+  relax_fine_nature:        ["kyoto","salzburg"],
+  adventure_seafood_beach:  ["sydney","dubrovnik"],
+  adventure_seafood_city:   ["barcelona","istanbul"],
+  adventure_seafood_nature: ["queenstown","bergen"],
+  adventure_street_beach:   ["rio","miami"],
+  adventure_street_city:    ["tokyo","seoul"],
+  adventure_street_nature:  ["taipei","chiangmai"],
+  adventure_fine_beach:     ["miami","nice"],
+  adventure_fine_city:      ["newyork","barcelona"],
+  adventure_fine_nature:    ["vancouver","queenstown"],
+  culture_seafood_beach:    ["dubrovnik","istanbul"],
+  culture_seafood_city:     ["istanbul","lisbon"],
+  culture_seafood_nature:   ["bergen","amalfi"],
+  culture_street_beach:     ["havana","rio"],
+  culture_street_city:      ["seoul","tokyo"],
+  culture_street_nature:    ["luangprabang","chiangmai"],
+  culture_fine_beach:       ["nice","dubrovnik"],
+  culture_fine_city:        ["vienna","copenhagen"],
+  culture_fine_nature:      ["salzburg","kyoto"]
+};
+
+// ─── State ─────────────────────────────────────────
+let answers = [];
+let currentQ = 0;
+let cycleIndex = 0;
+
+// ─── Language ────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-zh').classList.toggle('active', l === 'zh');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  const titleEl = document.getElementById('welcome-title');
+  titleEl.classList.toggle('en', l === 'en');
+  if (l === 'zh') {
+    titleEl.textContent = '旅行靈感';
+    document.getElementById('welcome-tagline').textContent = '三個問題，一座屬於你的城市';
+    document.getElementById('start-btn').textContent = '開始探索 →';
+  } else {
+    titleEl.textContent = 'Travel Muse';
+    document.getElementById('welcome-tagline').textContent = 'Three questions. One city. Just for you.';
+    document.getElementById('start-btn').textContent = 'Start Exploring →';
+  }
+}
+
+// ─── Screens ────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ─── Quiz ────────────────────────────────────────────
+function startQuiz() {
+  answers = [];
+  currentQ = 0;
+  cycleIndex = 0;
+  show('quiz');
+  renderQ(0, false);
+}
+
+function renderQ(idx, fromNext) {
+  const q = questions[lang][idx];
+  const bars = document.querySelectorAll('.progress-bar');
+  bars.forEach((b, i) => b.classList.toggle('done', i < idx));
+
+  const wrap = document.getElementById('qWrap');
+  if (fromNext) {
+    wrap.style.transition = 'none';
+    wrap.style.opacity = '0';
+    wrap.style.transform = 'translateY(24px)';
+  }
+
+  wrap.innerHTML = `
+    <div class="q-step">${q.step}</div>
+    <h2 class="q-text">${q.text}</h2>
+    <div class="options">
+      ${q.opts.map(o => `
+        <button class="opt" onclick="pick('${o.val}')">
+          <span class="opt-icon">${o.icon}</span>
+          <span class="opt-text">${o.text}</span>
+        </button>`).join('')}
+    </div>`;
+
+  requestAnimationFrame(() => {
+    wrap.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    wrap.style.opacity = '1';
+    wrap.style.transform = 'translateY(0)';
+  });
+}
+
+function pick(val) {
+  answers.push(val);
+  if (currentQ < 2) {
+    const wrap = document.getElementById('qWrap');
+    wrap.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
+    wrap.style.opacity = '0';
+    wrap.style.transform = 'translateY(-20px)';
+    currentQ++;
+    setTimeout(() => renderQ(currentQ, true), 290);
+  } else {
+    loading();
+  }
+}
+
+// ─── Loading ──────────────────────────────────────────
+function loading() {
+  document.getElementById('loading-label').textContent =
+    lang === 'en' ? 'Finding your city…' : '正在尋找你的城市⋯';
+  show('loading');
+  showResult();
+}
+
+// ─── Result ───────────────────────────────────────────
+let slideIdx = 0;
+let slideTimer = null;
+
+function getCity() {
+  const key = answers.join('_');
+  const pool = cityMap[key] || ["tokyo","bali"];
+  return pool[cycleIndex % pool.length];
+}
+
+function showResult() {
+  const key = getCity();
+  const c = cities[key];
+
+  // Generate 3 picsum.photos URLs per city (landmarks, scenery, culture)
+  const citySeeds = {
+    maldives: [10, 20, 30],
+    lisbon: [40, 50, 60],
+    amalfi: [70, 80, 90],
+    bali: [100, 110, 120],
+    singapore: [130, 140, 150],
+    chiangmai: [160, 170, 180],
+    santorini: [190, 200, 210],
+    copenhagen: [220, 230, 240],
+    kyoto: [250, 260, 270],
+    sydney: [280, 290, 300],
+    barcelona: [310, 320, 330],
+    queenstown: [340, 350, 360],
+    rio: [370, 380, 390],
+    tokyo: [400, 410, 420],
+    taipei: [430, 440, 450],
+    miami: [460, 470, 480],
+    newyork: [490, 500, 510],
+    vancouver: [520, 530, 540],
+    dubrovnik: [550, 560, 570],
+    istanbul: [580, 590, 600],
+    bergen: [610, 620, 630],
+    havana: [640, 650, 660],
+    seoul: [670, 680, 690],
+    luangprabang: [700, 710, 720],
+    nice: [730, 740, 750],
+    vienna: [760, 770, 780],
+    salzburg: [790, 800, 810]
+  };
+
+  // Build 3 carousel slides with picsum.photos
+  const grid = document.getElementById('photosGrid');
+  const seeds = citySeeds[key] || citySeeds.tokyo;
+  const photos = seeds.map(s => `https://picsum.photos/1600/900?random=${s}`);
+
+  grid.innerHTML = photos.map((url, idx) => `
+    <div class="carousel-slide${idx === 0 ? ' active' : ''}">
+      <div class="shimmer"></div>
+      <img src="${url}" alt="">
+    </div>`
+  ).join('');
+
+  // Load images
+  const imgs = grid.querySelectorAll('img');
+  imgs.forEach(img => {
+    img.onload = () => {
+      img.classList.add('in');
+      img.closest('.carousel-slide').querySelector('.shimmer').style.opacity = '0';
+    };
+    img.onerror = () => {
+      img.closest('.carousel-slide').querySelector('.shimmer').style.background = 'linear-gradient(135deg,#1a1a2e,#16213e)';
+    };
+  });
+
+  // Show dots and build them
+  const dotsEl = document.getElementById('carouselDots');
+  dotsEl.style.display = 'flex';
+  dotsEl.innerHTML = photos.map((_, i) =>
+    `<div class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goSlide(${i})"></div>`
+  ).join('');
+
+  slideIdx = 0;
+  startCarousel();
+
+  // Info panel
+  const en = lang === 'en';
+  document.getElementById('resultInfo').innerHTML = `
+    <div class="r-name">${en ? c.nameEn : c.name}</div>
+    <div class="r-sub">${en ? c.subEn : c.sub}</div>
+    <p class="r-desc">${en ? c.descEn : c.desc}</p>
+    <div class="r-tags">${(en ? c.tagsEn : c.tags).map(t=>`<span class="r-tag">${t}</span>`).join('')}</div>
+    <div class="r-actions">
+      <button class="abtn abtn-primary" onclick="keepCity()">${en ? 'This is the one ✦' : '就是這裡了 ✦'}</button>
+      <button class="abtn abtn-secondary" onclick="regen()">${en ? '↺ Try another city' : '↺ 換一個城市'}</button>
+      <button class="abtn abtn-ghost" onclick="startQuiz()">${en ? '← Start over' : '← 重新作答'}</button>
+    </div>`;
+
+  show('result');
+}
+
+function goSlide(n) {
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-dot');
+  if (!slides.length) return;
+  slides[slideIdx].classList.remove('active');
+  dots[slideIdx].classList.remove('active');
+  slideIdx = (n + slides.length) % slides.length;
+  slides[slideIdx].classList.add('active');
+  dots[slideIdx].classList.add('active');
+  // reset auto-advance on manual interaction
+  startCarousel();
+}
+
+function startCarousel() {
+  if (slideTimer) clearInterval(slideTimer);
+  slideTimer = setInterval(() => goSlide(slideIdx + 1), 4500);
+}
+
+function stopCarousel() {
+  if (slideTimer) { clearInterval(slideTimer); slideTimer = null; }
+}
+
+function regen() {
+  stopCarousel();
+  cycleIndex++;
+  loading();
+}
+
+function keepCity() {
+  const toast = document.getElementById('toast');
+  toast.textContent = lang === 'en' ? 'Saved — enjoy your journey ✦' : '已收藏，享受你的旅程 ✦';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
