@@ -1298,13 +1298,13 @@ function showResult() {
   const key = getCity();
   const c = cities[key];
 
-  // Generate 3 Unsplash images using city name
+  // Generate 3 Unsplash images using city name with travel keywords
   const grid = document.getElementById('photosGrid');
-  const cityName = c.name.split('·')[0].trim();
+  const cityEn = c.nameEn;
   const photos = [
-    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityName)}`,
-    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityName + ' travel')}`,
-    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityName + ' landscape')}`
+    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityEn)},destination`,
+    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityEn)},travel,tourism`,
+    `https://source.unsplash.com/1600x900/?${encodeURIComponent(cityEn)},city`
   ];
 
   grid.innerHTML = photos.map((url, idx) => `
