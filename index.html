@@ -1312,7 +1312,7 @@ function showResult() {
     nice: [730, 740, 750], vienna: [760, 770, 780], salzburg: [790, 800, 810]
   };
   const seeds = citySeeds[getCity()] || [10, 20, 30];
-  const photos = seeds.map(s => `https://picsum.photos/1600/900?random=${s}`);
+  const photos = seeds.map(s => `https://picsum.photos/id/${s}/1600/900`);
 
   grid.innerHTML = photos.map((url, idx) => `
     <div class="carousel-slide${idx === 0 ? ' active' : ''}">
