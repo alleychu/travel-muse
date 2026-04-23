@@ -478,6 +478,113 @@ body {
   color: rgba(240,236,228,0.75);
 }
 
+/* ── Tips Screen ── */
+#tips {
+  background: linear-gradient(135deg, rgba(201,169,110,0.08) 0%, rgba(20,20,40,0.8) 100%), var(--dark);
+  overflow-y: auto;
+  align-items: center;
+  padding: 40px 20px;
+  display: flex;
+}
+
+.tips-container {
+  width: 100%;
+  max-width: 720px;
+  padding: 44px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(20,20,40,0.6);
+  backdrop-filter: blur(10px);
+}
+
+.tips-close {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 14px;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  margin-bottom: 24px;
+  padding: 0;
+  transition: color 0.3s;
+}
+
+.tips-close:hover {
+  color: var(--gold-light);
+}
+
+.tips-header {
+  margin-bottom: 36px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+}
+
+.tips-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, var(--text), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tips-subtitle {
+  font-size: 13px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.tips-content {
+  margin-bottom: 32px;
+}
+
+.tips-section {
+  margin-bottom: 28px;
+}
+
+.tips-section-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gold-light);
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tips-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(240,236,228,0.85);
+  margin: 0;
+  padding-left: 24px;
+}
+
+.tips-action-btn {
+  width: 100%;
+  padding: 14px 0;
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: none;
+}
+
+.tips-action-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(201,169,110,0.3);
+}
+
 /* ── Responsive ── */
 @media (max-width: 700px) {
   .photos-grid {
@@ -491,6 +598,9 @@ body {
   .result-info { padding: 28px 22px; }
   .r-actions { flex-direction: column; }
   .abtn { width: 100%; justify-content: center; }
+
+  .tips-container { padding: 32px 20px; }
+  .tips-title { font-size: 28px; }
 }
 </style>
 </head>
@@ -544,6 +654,37 @@ body {
   <div class="carousel-dots" id="carouselDots"></div>
   <div class="result-overlay"></div>
   <div class="result-info" id="resultInfo"></div>
+</div>
+
+<!-- Tips -->
+<div id="tips" class="screen">
+  <div class="tips-container">
+    <button class="tips-close" onclick="show('result')">← 返回</button>
+
+    <div class="tips-header">
+      <h2 class="tips-title"></h2>
+      <p class="tips-subtitle"></p>
+    </div>
+
+    <div class="tips-content">
+      <div class="tips-section">
+        <h3 class="tips-section-title" id="tips-weather-title">🌦 天氣氣候</h3>
+        <p class="tips-text" id="tips-weather"></p>
+      </div>
+
+      <div class="tips-section">
+        <h3 class="tips-section-title" id="tips-culture-title">🏛 文化禁忌</h3>
+        <p class="tips-text" id="tips-culture"></p>
+      </div>
+
+      <div class="tips-section">
+        <h3 class="tips-section-title" id="tips-voltage-title">⚡ 電源電壓</h3>
+        <p class="tips-text" id="tips-voltage"></p>
+      </div>
+    </div>
+
+    <button class="tips-action-btn" id="tips-map-btn" onclick="openGoogleMap()">查看Google Map</button>
+  </div>
 </div>
 
 <div class="toast" id="toast">已收藏，享受你的旅程 ✦</div>
@@ -622,7 +763,13 @@ const cities = {
     descEn:"Crystal-clear lagoons, powder-white sand and overwater bungalows above turquoise reefs — the Maldives is the closest place on Earth to paradise. Time slows here, and the only things left are sea breeze and sunlight.",
     tags:["🌊 水上屋","🤿 珊瑚浮潛","🌅 絕美日落"],
     tagsEn:["🌊 Overwater Villas","🤿 Snorkelling","🌅 Stunning Sunsets"],
-    queries:["maldives overwater bungalow","maldives turquoise ocean","maldives white sand beach","maldives coral reef underwater","maldives sunset lagoon"]
+    queries:["maldives overwater bungalow","maldives turquoise ocean","maldives white sand beach","maldives coral reef underwater","maldives sunset lagoon"],
+    weather:"全年溫暖，5-10月為雨季。平均溫度25-30°C。建議11月至3月前往。",
+    weatherEn:"Tropical climate year-round. May-October is monsoon season. Temperatures 25-30°C. Best: November to March.",
+    cultureTips:"尊重伊斯蘭文化，避免在公共場合飲酒。女性應著保守服飾。齋月期間禁止飲食和飲酒。",
+    cultureTipsEn:"Respect Islamic culture. Avoid public drinking. Women dress conservatively. No eating/drinking during Ramadan.",
+    voltage:"電壓230V。插頭類型：G型(英標)、A型(美標)。需攜帶轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: G (UK), A (US). Bring adapters."
   },
   lisbon: {
     name:"里斯本", sub:"Lisbon · 葡萄牙",
@@ -631,7 +778,13 @@ const cities = {
     descEn:"Seven hills, golden trams winding past azulejo-tiled walls, and the Atlantic salt air mixing with grilled sardines — Lisbon is an ancient city with an unhurried soul. As the sun sets over the Tagus, the melancholic notes of Fado drift through the evening air.",
     tags:["🚋 古典電車","🐟 新鮮海鮮","🎵 Fado 音樂"],
     tagsEn:["🚋 Vintage Trams","🐟 Fresh Seafood","🎵 Fado Music"],
-    queries:["lisbon tram yellow street","lisbon alfama colorful tiles","lisbon tagus river sunset","lisbon seafood sardines","belem tower portugal"]
+    queries:["lisbon tram yellow street","lisbon alfama colorful tiles","lisbon tagus river sunset","lisbon seafood sardines","belem tower portugal"],
+    weather:"溫帶氣候。9月-10月和4月-5月為最佳季節，溫度15-25°C。冬季較冷，5-8月較熱。",
+    weatherEn:"Temperate climate. Best: September-October and April-May (15-25°C). Winters cool, summers warm.",
+    cultureTips:"葡萄牙人友好熱情。用餐時避免大聲喧嘩。尊重當地傳統。吸菸在室內公共場所被禁止。",
+    cultureTipsEn:"Portuguese are warm and friendly. Avoid loud behavior at meals. Smoking banned in public spaces.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   amalfi: {
     name:"阿瑪菲海岸", sub:"Amalfi Coast · 義大利",
@@ -640,7 +793,13 @@ const cities = {
     descEn:"Colourful clifftop villages tumble down to the Mediterranean, and every corner looks like a postcard. Fresh lobster with chilled white wine, a sea breeze in your hair — the Amalfi Coast is your most vivid idea of perfection.",
     tags:["🏔️ 懸崖小鎮","🦞 地中海料理","🛥️ 遊艇出海"],
     tagsEn:["🏔️ Clifftop Villages","🦞 Mediterranean Cuisine","🛥️ Boat Trips"],
-    queries:["amalfi coast italy cliffside","positano colorful houses sea","amalfi mediterranean water","capri blue grotto italy","ravello garden terrace view"]
+    queries:["amalfi coast italy cliffside","positano colorful houses sea","amalfi mediterranean water","capri blue grotto italy","ravello garden terrace view"],
+    weather:"地中海氣候。4月-10月為旅遊季節。夏季炎熱(25-30°C)，冬季溫和(8-15°C)。",
+    weatherEn:"Mediterranean climate. Best: April-October. Summers hot (25-30°C), winters mild (8-15°C).",
+    cultureTips:"義大利人重視禮儀和著裝。進入教堂需著整齊衣物。午餐時間(12-3點)許多店鋪關閉。",
+    cultureTipsEn:"Italians value etiquette and dress. Dress properly in churches. Shops close during lunch (12-3pm).",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   bali: {
     name:"峇里島", sub:"Bali · 印尼",
@@ -649,7 +808,13 @@ const cities = {
     descEn:"Temple incense and tropical flowers perfume the air, while terraced rice fields shimmer in the morning mist. Night market satay, jungle infinity pools and warm Balinese hospitality make this island both serene and electric.",
     tags:["🌺 印度教文化","🍢 沙嗲烤肉","🌿 叢林泳池"],
     tagsEn:["🌺 Hindu Culture","🍢 Satay & Street Food","🌿 Jungle Pools"],
-    queries:["bali temple sunset ceremony","bali rice terraces ubud morning","bali seminyak beach sunset","bali street food night market","bali infinity pool jungle"]
+    queries:["bali temple sunset ceremony","bali rice terraces ubud morning","bali seminyak beach sunset","bali street food night market","bali infinity pool jungle"],
+    weather:"熱帶氣候。4月-10月為乾季(最佳季節)，溫度25-28°C。11月-3月為雨季，較濕熱。",
+    weatherEn:"Tropical climate. Dry season (April-October) is best: 25-28°C. Wet season (November-March) is humid.",
+    cultureTips:"尊重當地信仰與廟宇。進廟宇需著整齊衣物。避免觸碰他人頭部。勿踐踏聖像。",
+    cultureTipsEn:"Respect temples and religious sites. Dress modestly in temples. Don't touch people's heads. Avoid stepping on sacred images.",
+    voltage:"電壓220V。插頭類型：C型(歐標)。建議攜帶轉接器。",
+    voltageEn:"Voltage: 220V. Plug type: C (EU standard). Bring adapters."
   },
   singapore: {
     name:"新加坡", sub:"Singapore · 東南亞",
@@ -658,7 +823,13 @@ const cities = {
     descEn:"A garden city where glass towers and tropical trees coexist seamlessly, and Marina Bay glows like a dream at night. The hawker centres serve Hainanese chicken rice, bak kut teh and char kway teow — an entire continent on a single tray.",
     tags:["🌆 濱海灣夜景","🍜 小販中心","🌿 超級樹叢林"],
     tagsEn:["🌆 Marina Bay","🍜 Hawker Centres","🌿 City in a Garden"],
-    queries:["singapore marina bay sands night","singapore gardens by the bay","singapore hawker food","singapore chinatown street","singapore merlion harbor"]
+    queries:["singapore marina bay sands night","singapore gardens by the bay","singapore hawker food","singapore chinatown street","singapore merlion harbor"],
+    weather:"熱帶氣候，全年溫度24-32°C。下雨季節分散，任何季節皆可。11月-1月較涼爽。",
+    weatherEn:"Tropical climate, year-round 24-32°C. Rainfall spread throughout year. Best: November-January (cooler).",
+    cultureTips:"新加坡多元文化社會。尊重各宗教信仰。不可隨地吐痰、鐵路上飲食。公共場合禁菸。",
+    cultureTipsEn:"Singapore is multicultural. Respect all religions. No spitting or eating on trains. Public smoking banned.",
+    voltage:"電壓230V。插頭類型：G型(英標)。建議攜帶轉接器。",
+    voltageEn:"Voltage: 230V. Plug type: G (UK standard). Bring adapters."
   },
   chiangmai: {
     name:"清邁", sub:"Chiang Mai · 泰國",
@@ -667,7 +838,13 @@ const cities = {
     descEn:"An ancient walled city ringed by misty mountains, where night market lanterns glow like constellations and the air smells of lemongrass and coconut milk. Golden temples and morning bells invite you to breathe deeply and slow down.",
     tags:["🏯 古城牆","🏮 天燈節","🧘 山中寺廟"],
     tagsEn:["🏯 Ancient City Walls","🏮 Yi Peng Lanterns","🧘 Mountain Temples"],
-    queries:["chiang mai temple thailand","chiang mai night market lanterns","doi inthanon mountain fog thailand","chiang mai street food market","chiang mai yi peng lantern festival"]
+    queries:["chiang mai temple thailand","chiang mai night market lanterns","doi inthanon mountain fog thailand","chiang mai street food market","chiang mai yi peng lantern festival"],
+    weather:"熱帶季風氣候。11月-2月為最佳季節，溫度15-25°C。3月-5月炎熱(30-40°C)。6月-10月多雨。",
+    weatherEn:"Tropical monsoon. Best: November-February (15-25°C). March-May hot (30-40°C). June-October rainy.",
+    cultureTips:"泰國人尊敬國王，不可貶低王室。進入寺廟需脫鞋，著整齊衣物。避免觸碰他人頭部。",
+    cultureTipsEn:"Thais respect the royal family - never insult them. Remove shoes in temples, dress modestly. Don't touch people's heads.",
+    voltage:"電壓220V。插頭類型：A型、B型(美標)、C型(歐標)。建議攜帶萬用轉接器。",
+    voltageEn:"Voltage: 220V. Plug types: A, B (US), C (EU). Bring multi-type adapter."
   },
   santorini: {
     name:"聖托里尼", sub:"Santorini · 希臘",
@@ -676,7 +853,13 @@ const cities = {
     descEn:"Blue-domed churches against an impossibly blue sea — Santorini's iconic silhouette never loses its magic. The sunset at Oia is among the world's most beautiful, best enjoyed with a glass of crisp local wine in hand.",
     tags:["⛪ 藍頂教堂","🍷 希臘白酒","🌅 伊亞日落"],
     tagsEn:["⛪ Blue Dome Churches","🍷 Greek Wine","🌅 Oia Sunset"],
-    queries:["santorini oia sunset blue dome","santorini white cyclades church","santorini caldera view","santorini cliffside village night","santorini wine sea view"]
+    queries:["santorini oia sunset blue dome","santorini white cyclades church","santorini caldera view","santorini cliffside village night","santorini wine sea view"],
+    weather:"地中海氣候。4月-10月為最佳季節，溫度20-29°C。7月-8月最熱且人多。冬季較少遊客。",
+    weatherEn:"Mediterranean climate. Best: April-October (20-29°C). July-August hottest and most crowded.",
+    cultureTips:"希臘人友善熱情。進餐廳最好提前訂位。尊重正教會傳統。小費通常為5-10%。",
+    cultureTipsEn:"Greeks are warm and hospitable. Book restaurants ahead. Respect Orthodox traditions. Tip 5-10%.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   copenhagen: {
     name:"哥本哈根", sub:"Copenhagen · 丹麥",
@@ -685,7 +868,13 @@ const cities = {
     descEn:"One of the world's happiest cities and birthplace of New Nordic cuisine, where colourful townhouses reflect in the canal and every café is a masterclass in hygge. Bicycles glide through beautifully designed streets that feel thoughtful at every turn.",
     tags:["🚲 單車之都","🍽️ 北歐美食","🎨 設計王國"],
     tagsEn:["🚲 Cycling City","🍽️ Nordic Cuisine","🎨 Design Capital"],
-    queries:["copenhagen nyhavn colorful canal","copenhagen denmark waterfront","nordic food restaurant plating","copenhagen bicycle street","copenhagen modern architecture design"]
+    queries:["copenhagen nyhavn colorful canal","copenhagen denmark waterfront","nordic food restaurant plating","copenhagen bicycle street","copenhagen modern architecture design"],
+    weather:"溫帶氣候。5月-9月為最佳季節，溫度15-23°C。冬季(11月-3月)寒冷，常見雪。",
+    weatherEn:"Temperate climate. Best: May-September (15-23°C). Winters cold (November-March) with snow.",
+    cultureTips:"丹麥人注重工作與生活平衡。守時非常重要。冬季著重hygge(舒適溫暖)文化。敬重個人隱私。",
+    cultureTipsEn:"Danes value work-life balance. Punctuality is important. Hygge (coziness) is central to winter culture. Respect privacy.",
+    voltage:"電壓230V。插頭類型：C型、E型、K型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, E, K (EU standard). Use EU adapters."
   },
   kyoto: {
     name:"京都", sub:"Kyoto · 日本",
@@ -694,7 +883,13 @@ const cities = {
     descEn:"A thousand shrines guard this thousand-year-old capital, and bamboo groves are silvered with morning mist. Matcha, tofu and the quiet ceremony of tea coax the mind into stillness — every season reveals a different poem.",
     tags:["⛩️ 千座神社","🍵 抹茶文化","🎋 嵐山竹林"],
     tagsEn:["⛩️ A Thousand Shrines","🍵 Tea Ceremony","🎋 Arashiyama Bamboo"],
-    queries:["kyoto fushimi inari shrine gates","kyoto arashiyama bamboo grove","kyoto geisha gion district","kyoto matcha tea ceremony","kyoto autumn leaves temple"]
+    queries:["kyoto fushimi inari shrine gates","kyoto arashiyama bamboo grove","kyoto geisha gion district","kyoto matcha tea ceremony","kyoto autumn leaves temple"],
+    weather:"四季分明。春季(3月-5月)櫻花盛開。秋季(9月-11月)楓葉美麗。夏季濕熱，冬季寒冷。",
+    weatherEn:"Distinct seasons. Spring (March-May) has cherry blossoms. Fall (September-November) has autumn colors. Hot humid summers, cold winters.",
+    cultureTips:"京都人古風傳統。在傳統寺廟與餐廳需保持恭敬。不可在行走時飲食。尊重傳統藝妓文化。",
+    cultureTipsEn:"Kyotoites value tradition. Be respectful in temples and traditional restaurants. Don't eat while walking. Respect geisha culture.",
+    voltage:"電壓100V。插頭類型：A型(美標)。帶轉接器或電壓轉換器。",
+    voltageEn:"Voltage: 100V. Plug type: A (US standard). Bring adapter/voltage converter."
   },
   sydney: {
     name:"雪梨", sub:"Sydney · 澳洲",
@@ -703,7 +898,13 @@ const cities = {
     descEn:"The white sails of the Opera House rise above one of the world's great harbours, while Bondi Beach hums with surfers and salt air. Sydney blends wild nature with cosmopolitan energy in a way few cities ever manage.",
     tags:["🦘 邦代海灘","🦞 澳洲海鮮","🏄 衝浪文化"],
     tagsEn:["🦘 Bondi Beach","🦞 Australian Seafood","🏄 Surf Culture"],
-    queries:["sydney opera house harbour","bondi beach surf waves","sydney seafood fish market","sydney harbour bridge aerial","sydney manly beach ocean pool"]
+    queries:["sydney opera house harbour","bondi beach surf waves","sydney seafood fish market","sydney harbour bridge aerial","sydney manly beach ocean pool"],
+    weather:"南半球季節制。春季(9月-11月)與秋季(3月-5月)最舒適，溫度15-25°C。夏季(12月-2月)炎熱。",
+    weatherEn:"Southern hemisphere seasons. Spring (Sept-Nov) and fall (March-May) best: 15-25°C. Summer (Dec-Feb) is hot.",
+    cultureTips:"澳洲文化輕鬆友善。海灘文化發達，游泳前查看安全警示。遵守路規，行人禮儀重要。",
+    cultureTipsEn:"Australian culture is relaxed and friendly. Beach culture is strong - check safety signs. Follow traffic rules, pedestrian etiquette matters.",
+    voltage:"電壓230V。插頭類型：I型(澳標)。帶澳洲轉接器。",
+    voltageEn:"Voltage: 230V. Plug type: I (AU standard). Bring Australian adapter."
   },
   barcelona: {
     name:"巴塞隆納", sub:"Barcelona · 西班牙",
@@ -712,7 +913,13 @@ const cities = {
     descEn:"Gaudí's visionary architecture blooms across the city, and the Sagrada Família's stained glass turns sunlight into a miracle. La Boqueria's seafood, tapas and sangria ignite every sense — Barcelona refuses to be boring.",
     tags:["🏛️ 高第建築","🦐 海鮮塔帕斯","🎭 佛朗明哥"],
     tagsEn:["🏛️ Gaudí Architecture","🦐 Tapas & Seafood","🎭 Flamenco"],
-    queries:["barcelona sagrada familia gaudi","barcelona park guell mosaic","barcelona tapas seafood paella","barcelona gothic quarter street","la boqueria market barcelona"]
+    queries:["barcelona sagrada familia gaudi","barcelona park guell mosaic","barcelona tapas seafood paella","barcelona gothic quarter street","la boqueria market barcelona"],
+    weather:"地中海氣候。4月-6月與9月-10月最宜，溫度15-25°C。夏季(7月-8月)炎熱擁擠。冬季溫和。",
+    weatherEn:"Mediterranean climate. Best: April-June and September-October (15-25°C). July-August hot and crowded.",
+    cultureTips:"西班牙人社交友善。午餐與晚餐時間晚(12-1點、8-10點)。小費為5-10%。尊重加泰隆文化。",
+    cultureTipsEn:"Spanish are socially warm. Meal times are late: lunch 12-1pm, dinner 8-10pm. Tip 5-10%. Respect Catalan culture.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   queenstown: {
     name:"皇后鎮", sub:"Queenstown · 紐西蘭",
@@ -721,7 +928,13 @@ const cities = {
     descEn:"The adventure capital of the world, cradled by snow-capped peaks and mirrored lakes where bungee jumping and skydiving were born. When the adrenaline fades, Lake Wakatipu's silence is breathtaking in an entirely different way.",
     tags:["🪂 高空跳傘","🏔️ 雪山湖泊","🏔️ 南島峽灣"],
     tagsEn:["🪂 Skydiving","🏔️ Mountain Lakes","🏔️ South Island Fjords"],
-    queries:["queenstown new zealand lake wakatipu","queenstown bungee jump adventure","remarkables mountain reflection lake","queenstown snowfield skiing","milford sound fiord new zealand"]
+    queries:["queenstown new zealand lake wakatipu","queenstown bungee jump adventure","remarkables mountain reflection lake","queenstown snowfield skiing","milford sound fiord new zealand"],
+    weather:"南半球季節制。秋季(3月-5月)與春季(9月-11月)最宜，溫度12-21°C。冬季(6月-8月)下雪適合滑雪。",
+    weatherEn:"Southern hemisphere seasons. Fall (March-May) and spring (Sept-Nov) best: 12-21°C. Winter (June-August) snowy and great for skiing.",
+    cultureTips:"紐西蘭人友善放鬆。毛利文化備受尊重，避免貶低當地原住民。戶外運動遵循安全規則。",
+    cultureTipsEn:"New Zealanders are friendly and laid-back. Māori culture is respected - never disrespect indigenous people. Follow outdoor safety rules.",
+    voltage:"電壓230V。插頭類型：I型(澳紐標)。帶紐澳轉接器。",
+    voltageEn:"Voltage: 230V. Plug type: I (AU/NZ standard). Bring AU/NZ adapter."
   },
   rio: {
     name:"里約熱內盧", sub:"Rio de Janeiro · 巴西",
@@ -730,7 +943,13 @@ const cities = {
     descEn:"Christ the Redeemer watches over a city where mountains, sea and forest coexist in extraordinary proximity. Sun-bronzed bodies on Ipanema, samba rhythms seeping from every corner — Rio pulses with an irresistible life force.",
     tags:["⛰️ 基督像","🏖️ 伊帕內瑪","🥁 嘉年華節慶"],
     tagsEn:["⛰️ Christ the Redeemer","🏖️ Ipanema Beach","🥁 Carnival & Samba"],
-    queries:["rio de janeiro christ redeemer","ipanema beach sunset rio","rio carnival samba colorful","rio sugarloaf mountain view","copacabana beach rio night"]
+    queries:["rio de janeiro christ redeemer","ipanema beach sunset rio","rio carnival samba colorful","rio sugarloaf mountain view","copacabana beach rio night"],
+    weather:"熱帶氣候。全年溫暖，12月-3月為夏季與雨季(最熱)。4月-11月為乾季，溫度20-27°C。",
+    weatherEn:"Tropical climate. Warm year-round. December-March hot and rainy (summer). April-November dry: 20-27°C.",
+    cultureTips:"巴西人熱情好客。貼身接觸與擁抱是常見問候。嘉年華期間需注意人身安全。避免展示昂貴物品。",
+    cultureTipsEn:"Brazilians are warm and affectionate. Hugs are common greetings. Be careful during Carnival. Don't display expensive items.",
+    voltage:"電壓110V/220V(混用)。插頭類型：A型、B型、C型。帶多功能轉接器。",
+    voltageEn:"Voltage: 110V/220V (mixed). Plug types: A, B, C. Bring multi-type adapter."
   },
   tokyo: {
     name:"東京", sub:"Tokyo · 日本",
@@ -739,7 +958,13 @@ const cities = {
     descEn:"The world's most densely rewarding food city, where a Michelin-starred meal sits a block from a perfect midnight ramen. Neon lights shimmer in rain-soaked streets while ancient shrines stand serenely between skyscrapers — Tokyo turns contradictions into charm.",
     tags:["🍜 拉麵文化","🌸 霓虹夜景","⛩️ 都市神社"],
     tagsEn:["🍜 Ramen Culture","🌸 Neon Nightlife","⛩️ Urban Shrines"],
-    queries:["tokyo shibuya crossing night neon","tokyo ramen restaurant food","tokyo shinjuku neon lights rain","tokyo senso ji temple","tokyo tsukiji sushi market"]
+    queries:["tokyo shibuya crossing night neon","tokyo ramen restaurant food","tokyo shinjuku neon lights rain","tokyo senso ji temple","tokyo tsukiji sushi market"],
+    weather:"溫帶氣候，四季分明。春季(3月-5月)櫻花盛開。秋季(9月-11月)涼爽舒適。夏季悶熱，冬季寒冷。",
+    weatherEn:"Temperate, four distinct seasons. Spring (March-May) has cherry blossoms. Fall (Sept-Nov) is cool and comfortable. Hot humid summers, cold winters.",
+    cultureTips:"日本文化講求禮儀。鞋子進屋前脫掉。不可插筷子於米飯中(忌諱)。避免觸碰他人。尊敬年長者。",
+    cultureTipsEn:"Japanese culture values etiquette. Remove shoes before entering homes. Never stick chopsticks in rice (funeral ritual). Respect elders. Avoid touching others.",
+    voltage:"電壓100V。插頭類型：A型(美標)。帶轉接器或電壓轉換器。",
+    voltageEn:"Voltage: 100V. Plug type: A (US standard). Bring adapter/voltage converter."
   },
   taipei: {
     name:"台北", sub:"Taipei · 台灣",
@@ -748,7 +973,13 @@ const cities = {
     descEn:"Night markets, mountain tea houses and the world's best bubble tea all in one city that feels effortlessly familiar. Xiaolongbao, beef noodle soup and the lanterns of Jiufen hillside — Taipei's street food culture has a soul impossible to replicate.",
     tags:["🧋 珍珠奶茶","🏮 九份夜景","🗻 陽明山"],
     tagsEn:["🧋 Bubble Tea","🏮 Jiufen Lanterns","🗻 Yangmingshan"],
-    queries:["taipei night market street food","taipei 101 skyline","jiufen lantern taiwan mountain","taipei bubble tea drink","yangmingshan volcano mountain taipei"]
+    queries:["taipei night market street food","taipei 101 skyline","jiufen lantern taiwan mountain","taipei bubble tea drink","yangmingshan volcano mountain taipei"],
+    weather:"亞熱帶氣候。春季(3月-5月)與秋季(9月-11月)最宜，溫度15-25°C。夏季炎熱潮濕。冬季溫和。",
+    weatherEn:"Subtropical climate. Spring (March-May) and fall (Sept-Nov) best: 15-25°C. Summers hot and humid. Winters mild.",
+    cultureTips:"台灣人親切熱情。進廟宇需著整齊衣物。避免在人前打嗝。夜市文化是生活的一部分。",
+    cultureTipsEn:"Taiwanese are warm and friendly. Dress modestly in temples. Avoid burping in public. Night market culture is central to life.",
+    voltage:"電壓110V。插頭類型：A型(美標)。帶美標轉接器。",
+    voltageEn:"Voltage: 110V. Plug type: A (US standard). Bring US adapter."
   },
   miami: {
     name:"邁阿密", sub:"Miami · 美國",
@@ -757,7 +988,13 @@ const cities = {
     descEn:"Pastel Art Deco buildings face South Beach's blue skies, and the Cuban and Caribbean pulse makes even the sea breeze dance. Wynwood's murals, rooftop bars and world-class restaurants make Miami the ultimate party that never stops looking beautiful.",
     tags:["🌴 南灘陽光","🎨 Wynwood 藝術","🎵 拉丁音樂"],
     tagsEn:["🌴 South Beach","🎨 Wynwood Arts","🎵 Latin Music"],
-    queries:["miami south beach art deco","wynwood walls murals miami","miami ocean drive sunset palm","miami brickell skyline night","miami beach turquoise water"]
+    queries:["miami south beach art deco","wynwood walls murals miami","miami ocean drive sunset palm","miami brickell skyline night","miami beach turquoise water"],
+    weather:"亞熱帶氣候。11月-3月最宜，溫度20-26°C，濕度較低。6月-10月炎熱潮濕，颶風季。",
+    weatherEn:"Subtropical climate. Best: November-March (20-26°C, lower humidity). June-October hot, humid, hurricane season.",
+    cultureTips:"邁阿密文化多元。西班牙語在此普遍使用。古巴文化深厚。海灘着装隨意，但店鋪需着鞋。",
+    cultureTipsEn:"Miami is multicultural. Spanish widely spoken. Cuban culture is strong. Casual on beaches, but wear shoes in shops.",
+    voltage:"電壓120V。插頭類型：A型、B型(美標)。標準美標轉接器即可。",
+    voltageEn:"Voltage: 120V. Plug types: A, B (US standard). Standard US adapter."
   },
   newyork: {
     name:"紐約", sub:"New York · 美國",
@@ -766,7 +1003,13 @@ const cities = {
     descEn:"Between glass canyons, everyone is chasing their own version of the dream. Broadway lights, Central Park in autumn gold, a late-night pastrami sandwich — New York reveals a new story on every visit.",
     tags:["🗽 自由女神","🎭 百老匯","🥩 精緻美食"],
     tagsEn:["🗽 Statue of Liberty","🎭 Broadway","🥩 Fine Dining"],
-    queries:["new york manhattan skyline","central park autumn new york","times square new york night","new york brooklyn bridge aerial","new york fine dining restaurant"]
+    queries:["new york manhattan skyline","central park autumn new york","times square new york night","new york brooklyn bridge aerial","new york fine dining restaurant"],
+    weather:"溫帶氣候，四季分明。秋季(9月-11月)與春季(4月-6月)最美，溫度15-23°C。冬季寒冷下雪，夏季炎熱。",
+    weatherEn:"Temperate, four seasons. Fall (Sept-Nov) and spring (April-June) best: 15-23°C. Cold snowy winters, hot summers.",
+    cultureTips:"紐約人快節奏直接。地鐵文化重要，避免在地鐵內進食。禮貌提示：排隊守秩序。小費15-20%。",
+    cultureTipsEn:"New Yorkers are fast-paced and direct. Subway etiquette important - no eating on trains. Queuing is mandatory. Tip 15-20%.",
+    voltage:"電壓120V。插頭類型：A型、B型(美標)。標準美標轉接器即可。",
+    voltageEn:"Voltage: 120V. Plug types: A, B (US standard). Standard US adapter."
   },
   vancouver: {
     name:"溫哥華", sub:"Vancouver · 加拿大",
@@ -775,7 +1018,13 @@ const cities = {
     descEn:"Snow-capped mountains reflect in an emerald harbour, and Stanley Park's ancient cedars reach toward the sky. Pacific seafood, organic farmers' markets and mountain-fresh air — Vancouver makes clean and beautiful feel like everyday life.",
     tags:["🏔️ 雪山海灣","🌲 史丹利公園","🦞 太平洋海鮮"],
     tagsEn:["🏔️ Mountain Harbour","🌲 Stanley Park","🦞 Pacific Seafood"],
-    queries:["vancouver mountains harbor skyline","stanley park vancouver redwood","granville island market vancouver","whistler mountain ski snow","vancouver sunset beach ocean"]
+    queries:["vancouver mountains harbor skyline","stanley park vancouver redwood","granville island market vancouver","whistler mountain ski snow","vancouver sunset beach ocean"],
+    weather:"溫帶海洋氣候。5月-9月最宜，溫度18-25°C。冬季(11月-3月)多雨，常見霧。全年綠色。",
+    weatherEn:"Temperate maritime climate. Best: May-September (18-25°C). Winters (Nov-March) rainy and foggy. Always green.",
+    cultureTips:"加拿大人禮貌友善。多文化社會，尊重多元背景。戶外運動文化盛行。避免高聲喧嘩。",
+    cultureTipsEn:"Canadians are polite and friendly. Multicultural society - respect diversity. Outdoor culture is big. Avoid being loud.",
+    voltage:"電壓120V。插頭類型：A型、B型(美標)。標準美標轉接器即可。",
+    voltageEn:"Voltage: 120V. Plug types: A, B (US standard). Standard US adapter."
   },
   dubrovnik: {
     name:"杜布羅夫尼克", sub:"Dubrovnik · 克羅埃西亞",
@@ -784,7 +1033,13 @@ const cities = {
     descEn:"The Pearl of the Adriatic — terracotta rooftops and blue sea in perfect contrast, with ancient city walls offering a panorama that stops you in your tracks. Grilled octopus with local olive oil and Croatian white wine make this medieval city feel timeless.",
     tags:["🏰 古城牆","🐙 烤章魚","⚓ 亞得里亞海"],
     tagsEn:["🏰 Ancient City Walls","🐙 Grilled Octopus","⚓ Adriatic Sea"],
-    queries:["dubrovnik old town walls aerial","dubrovnik adriatic sea view blue","croatia seafood octopus grilled","dubrovnik orange rooftops church","hvar island croatia sea yacht"]
+    queries:["dubrovnik old town walls aerial","dubrovnik adriatic sea view blue","croatia seafood octopus grilled","dubrovnik orange rooftops church","hvar island croatia sea yacht"],
+    weather:"地中海氣候。4月-10月最宜，溫度18-28°C。7月-8月最熱且人最多。冬季溫和。",
+    weatherEn:"Mediterranean climate. Best: April-October (18-28°C). July-August hottest and most crowded. Mild winters.",
+    cultureTips:"克羅埃西亞人友善。進入教堂著整齊衣物。禮貌諮詢價格。尊重當地文化遺產。小費非強制但受歡迎。",
+    cultureTipsEn:"Croatians are friendly. Dress properly in churches. Politely inquire about prices. Respect cultural heritage. Tipping appreciated but optional.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   istanbul: {
     name:"伊斯坦堡", sub:"Istanbul · 土耳其",
@@ -793,7 +1048,13 @@ const cities = {
     descEn:"Straddling Europe and Asia, where white ferries cross the Bosphorus between two worlds. The Blue Mosque's call to prayer rises at dawn, the Grand Bazaar intoxicates with spice, and a grilled fish with pomegranate juice is the most delicious meeting of civilisations.",
     tags:["🕌 藍色清真寺","🐟 博斯普魯斯","🧅 大巴扎"],
     tagsEn:["🕌 Blue Mosque","🐟 Bosphorus","🧅 Grand Bazaar"],
-    queries:["istanbul hagia sophia blue mosque","istanbul bosphorus strait sunset","istanbul grand bazaar spices","istanbul turkish food street","istanbul galata tower night"]
+    queries:["istanbul hagia sophia blue mosque","istanbul bosphorus strait sunset","istanbul grand bazaar spices","istanbul turkish food street","istanbul galata tower night"],
+    weather:"溫帶氣候。4月-5月與9月-10月最宜，溫度15-25°C。夏季(6月-8月)炎熱乾燥。冬季溫和。",
+    weatherEn:"Temperate climate. Best: April-May and September-October (15-25°C). Summers hot and dry. Winters mild.",
+    cultureTips:"土耳其人好客溫暖。進清真寺脫鞋並著整齊衣物，女性應戴頭巾。避免比OK手勢。小費10-15%。",
+    cultureTipsEn:"Turks are hospitable and warm. Remove shoes in mosques, dress modestly. Women should cover hair. Avoid OK gesture. Tip 10-15%.",
+    voltage:"電壓220V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 220V. Plug types: C, F (EU standard). Use EU adapters."
   },
   bergen: {
     name:"卑爾根", sub:"Bergen · 挪威",
@@ -802,7 +1063,13 @@ const cities = {
     descEn:"A fjord city where the colourful Bryggen wharf has guarded this ancient Hanseatic port for centuries. The fish market serves salmon so fresh it barely left the water, and the funicular through mountain mist reveals a breathtaking panorama of city and fjord.",
     tags:["🏔️ 峽灣風景","🐟 三文魚市場","🎨 彩色木屋"],
     tagsEn:["🏔️ Fjord Scenery","🐟 Salmon Market","🎨 Colourful Wharf"],
-    queries:["bergen norway bryggen wharf","bergen fjord mountain view","bergen fish market salmon norway","norway fjord misty mountain","bergen funicular panorama view"]
+    queries:["bergen norway bryggen wharf","bergen fjord mountain view","bergen fish market salmon norway","norway fjord misty mountain","bergen funicular panorama view"],
+    weather:"溫帶海洋氣候。5月-9月最宜，溫度12-18°C。冬季(11月-3月)寒冷，常見雨雪。全年多雨。",
+    weatherEn:"Temperate maritime climate. Best: May-September (12-18°C). Winters cold, rainy/snowy. Always humid.",
+    cultureTips:"挪威人守秩序友善。尊重自然與環境。褓溫文守時。在大眾運輸上保持安靜。小費非強制。",
+    cultureTipsEn:"Norwegians are orderly and friendly. Respect nature and environment. Be quiet on public transport. Tipping not required.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   havana: {
     name:"哈瓦那", sub:"Havana · 古巴",
@@ -811,7 +1078,13 @@ const cities = {
     descEn:"Time seems frozen in the 1950s — vintage American cars cruise past colonial buildings, and mojitos bubble with mint and rum on every terrace. Salsa rhythms drift along the seafront Malecón, and this city speaks entirely in music.",
     tags:["🚗 復古老爺車","🎵 薩爾薩音樂","🍹 莫希托調酒"],
     tagsEn:["🚗 Vintage Cars","🎵 Salsa Music","🍹 Mojitos"],
-    queries:["havana cuba classic car colorful","havana malecon seafront sunset","havana colonial buildings colorful","cuba street music salsa dance","havana mojito cigar bar"]
+    queries:["havana cuba classic car colorful","havana malecon seafront sunset","havana colonial buildings colorful","cuba street music salsa dance","havana mojito cigar bar"],
+    weather:"熱帶氣候。11月-3月最宜，溫度20-28°C。6月-11月為颶風季。全年溫暖濕潤。",
+    weatherEn:"Tropical climate. Best: November-March (20-28°C). June-November hurricane season. Always warm and humid.",
+    cultureTips:"古巴人熱情好客。音樂與舞蹈文化深厚。禁止拍攝政府建築或軍事設施。尊重當地政治敏感性。",
+    cultureTipsEn:"Cubans are warm and hospitable. Music and dance are central. No photos of government/military buildings. Respect political sensitivity.",
+    voltage:"電壓110V/220V(混用)。插頭類型：A型、B型、C型。帶多功能轉接器。",
+    voltageEn:"Voltage: 110V/220V (mixed). Plug types: A, B, C. Bring multi-type adapter."
   },
   seoul: {
     name:"首爾", sub:"Seoul · 韓國",
@@ -820,7 +1093,13 @@ const cities = {
     descEn:"The birthplace of K-pop, yet the Han River banks are lined with serene pavilions and thousand-year-old palaces. Late-night Korean BBQ, shots of soju and Hongdae's indie boutiques — Seoul blurs the line between tradition and pop culture until it disappears.",
     tags:["🎤 K-pop 聖地","🥩 韓式烤肉","🏛️ 景福宮"],
     tagsEn:["🎤 K-pop Capital","🥩 Korean BBQ","🏛️ Gyeongbokgung"],
-    queries:["seoul gyeongbokgung palace night","seoul myeongdong street lights","seoul korean bbq restaurant","bukchon hanok village seoul","seoul han river city skyline"]
+    queries:["seoul gyeongbokgung palace night","seoul myeongdong street lights","seoul korean bbq restaurant","bukchon hanok village seoul","seoul han river city skyline"],
+    weather:"溫帶氣候，四季分明。春季(3月-5月)與秋季(9月-11月)最宜，溫度10-23°C。冬季寒冷，夏季悶熱。",
+    weatherEn:"Temperate, four seasons. Spring (March-May) and fall (Sept-Nov) best: 10-23°C. Cold winters, hot humid summers.",
+    cultureTips:"韓國人重視禮儀與階級。年長者優先。避免插筷子於米飯。進家居脫鞋。不可觸碰年長人頭部。",
+    cultureTipsEn:"Koreans value etiquette and hierarchy. Elders first. Don't stick chopsticks in rice. Remove shoes indoors. Don't touch elders' heads.",
+    voltage:"電壓220V。插頭類型：C型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 220V. Plug type: C (EU standard). Use EU adapter."
   },
   luangprabang: {
     name:"琅勃拉邦", sub:"Luang Prabang · 寮國",
@@ -829,7 +1108,13 @@ const cities = {
     descEn:"Saffron-robed monks glide along the Mekong at dawn in one of the Earth's most serene daily rituals. Ancient stupas emerge from tropical greenery, and French-colonial cafés carry an unhurried, timeless atmosphere — a city that time has treated kindly.",
     tags:["🙏 晨間托缽","🌊 湄公河","💧 光西瀑布"],
     tagsEn:["🙏 Morning Alms","🌊 Mekong River","💧 Kuang Si Falls"],
-    queries:["luang prabang monks alms ceremony","luang prabang mekong river sunset","luang prabang temple wat laos","luang prabang street market night","kuang si waterfall blue laos"]
+    queries:["luang prabang monks alms ceremony","luang prabang mekong river sunset","luang prabang temple wat laos","luang prabang street market night","kuang si waterfall blue laos"],
+    weather:"熱帶季風。11月-2月最宜，溫度15-25°C。3月-5月炎熱(30-40°C)。6月-10月多雨。",
+    weatherEn:"Tropical monsoon. Best: November-February (15-25°C). March-May hot (30-40°C). June-October rainy.",
+    cultureTips:"寮國人信仰佛教，尊重寺廟與僧侶。不可摸僧人。進廟宇需著整齊衣物與脫鞋。避免觸碰他人頭部。",
+    cultureTipsEn:"Lao people are Buddhist - respect temples and monks. Never touch monks. Dress modestly in temples, remove shoes. Don't touch heads.",
+    voltage:"電壓220V。插頭類型：A型、B型(美標)、C型(歐標)。帶多功能轉接器。",
+    voltageEn:"Voltage: 220V. Plug types: A, B (US), C (EU). Bring multi-type adapter."
   },
   nice: {
     name:"尼斯", sub:"Nice · 法國",
@@ -838,7 +1123,13 @@ const cities = {
     descEn:"The queen of the Côte d'Azur, where palm-lined promenades face an impossibly blue sea and Mediterranean light makes everything shimmer. Marinated olives, Provençal herbs and a salade niçoise from the old market — here, food is the finest art form.",
     tags:["🌊 蔚藍海岸","🫒 地中海料理","🎨 馬諦斯美術館"],
     tagsEn:["🌊 French Riviera","🫒 Mediterranean Food","🎨 Matisse Museum"],
-    queries:["nice france promenade anglais","cote d azur mediterranean coast","nice old town market france","monaco coastline aerial view","nice beach pebbles blue sea france"]
+    queries:["nice france promenade anglais","cote d azur mediterranean coast","nice old town market france","monaco coastline aerial view","nice beach pebbles blue sea france"],
+    weather:"地中海氣候。5月-9月最宜，溫度20-28°C。7月-8月最熱且人最多。冬季溫和。",
+    weatherEn:"Mediterranean climate. Best: May-September (20-28°C). July-August hottest and most crowded. Mild winters.",
+    cultureTips:"法國人重視禮貌與優雅。學習基本法語詞彙備受歡迎。進餐廳著整齊衣物。午餐與晚餐時間規律。小費非強制。",
+    cultureTipsEn:"French value politeness and elegance. Learning basic French appreciated. Dress nicely for dining. Meal times are regular. Tipping optional.",
+    voltage:"電壓230V。插頭類型：C型、E型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, E (EU standard). Use EU adapter."
   },
   vienna: {
     name:"維也納", sub:"Vienna · 奧地利",
@@ -847,7 +1138,13 @@ const cities = {
     descEn:"The Habsburg palaces left behind gilded grandeur where Mozart's notes still seem to echo in every cobbled square. Vienna's coffee house culture is a UNESCO intangible heritage — a Melange and a slice of Sachertorte is the most refined afternoon imaginable.",
     tags:["🎻 古典音樂","☕ 咖啡館文化","🏛️ 皇家宮廷"],
     tagsEn:["🎻 Classical Music","☕ Coffee House Culture","🏛️ Imperial Palaces"],
-    queries:["vienna schonbrunn palace garden","vienna opera house night","vienna coffee house sachertorte","vienna kunsthistorisches museum","vienna belvedere palace"]
+    queries:["vienna schonbrunn palace garden","vienna opera house night","vienna coffee house sachertorte","vienna kunsthistorisches museum","vienna belvedere palace"],
+    weather:"溫帶氣候。5月-9月最宜，溫度18-26°C。冬季(12月-2月)寒冷可見雪。春秋溫和。",
+    weatherEn:"Temperate climate. Best: May-September (18-26°C). Winters cold with possible snow. Spring/fall mild.",
+    cultureTips:"奧地利人禮貌守時。進教堂著整齊衣物。咖啡館文化深厚，在此可停留數小時。避免比OK手勢。小費5-10%。",
+    cultureTipsEn:"Austrians are polite and punctual. Dress properly in churches. Café culture is important - linger over coffee. Avoid OK gesture. Tip 5-10%.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   },
   salzburg: {
     name:"薩爾茨堡", sub:"Salzburg · 奧地利",
@@ -856,7 +1153,13 @@ const cities = {
     descEn:"Mozart's birthplace, where the Archbishop's palace reflects in the Salzach and the Alps sketch the horizon. During the summer music festival, the entire city becomes an open-air concert hall unlike any other in the world.",
     tags:["🎼 莫札特故鄉","🏔️ 阿爾卑斯山","🏰 霍亨薩爾茨堡"],
     tagsEn:["🎼 Mozart's Birthplace","🏔️ Alpine Scenery","🏰 Hohensalzburg Fortress"],
-    queries:["salzburg old town alps austria","hohensalzburg fortress salzburg","salzburg mirabell garden palace","salzkammergut lake mountain austria","austria alpine village mountain"]
+    queries:["salzburg old town alps austria","hohensalzburg fortress salzburg","salzburg mirabell garden palace","salzkammergut lake mountain austria","austria alpine village mountain"],
+    weather:"溫帶大陸氣候。5月-9月最宜，溫度15-25°C。冬季(12月-2月)寒冷多雪，適合滑雪。春秋溫和。",
+    weatherEn:"Temperate continental climate. Best: May-September (15-25°C). Winters cold and snowy - great for skiing. Spring/fall mild.",
+    cultureTips:"奧地利人禮貌守時。音樂文化深厚，尊重古典傳統。進教堂著整齊衣物。小費5-10%。",
+    cultureTipsEn:"Austrians are polite and punctual. Music culture is deep - respect classical traditions. Dress properly in churches. Tip 5-10%.",
+    voltage:"電壓230V。插頭類型：C型、F型(歐標)。使用歐標轉接器。",
+    voltageEn:"Voltage: 230V. Plug types: C, F (EU standard). Use EU adapters."
   }
 };
 
@@ -1104,10 +1407,29 @@ function regen() {
 }
 
 function keepCity() {
-  const toast = document.getElementById('toast');
-  toast.textContent = lang === 'en' ? 'Saved — enjoy your journey ✦' : '已收藏，享受你的旅程 ✦';
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2800);
+  const key = getCity();
+  const c = cities[key];
+  const en = lang === 'en';
+
+  document.querySelector('.tips-title').textContent = en ? c.nameEn : c.name;
+  document.querySelector('.tips-subtitle').textContent = en ? c.subEn : c.sub;
+  document.getElementById('tips-weather-title').textContent = en ? '🌦 Weather & Climate' : '🌦 天氣氣候';
+  document.getElementById('tips-culture-title').textContent = en ? '🏛 Cultural Customs' : '🏛 文化禁忌';
+  document.getElementById('tips-voltage-title').textContent = en ? '⚡ Electrical Voltage' : '⚡ 電源電壓';
+  document.getElementById('tips-weather').textContent = en ? c.weatherEn : c.weather;
+  document.getElementById('tips-culture').textContent = en ? c.cultureTipsEn : c.cultureTips;
+  document.getElementById('tips-voltage').textContent = en ? c.voltageEn : c.voltage;
+  document.getElementById('tips-map-btn').textContent = en ? 'View on Google Maps' : '查看Google Map';
+
+  show('tips');
+}
+
+function openGoogleMap() {
+  const key = getCity();
+  const c = cities[key];
+  const cityName = lang === 'en' ? c.nameEn : c.name;
+  const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(cityName)}`;
+  window.open(mapsUrl, '_blank');
 }
 </script>
 </body>
